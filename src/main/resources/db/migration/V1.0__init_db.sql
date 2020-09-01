@@ -300,10 +300,10 @@ CREATE TABLE IF NOT EXISTS `beauty_saloon`.`user`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `beauty_saloon`.`business_type`
 (
-    `int`  INT         NOT NULL AUTO_INCREMENT,
+    `id`  INT         NOT NULL AUTO_INCREMENT,
     `name` VARCHAR(45) NOT NULL,
-    PRIMARY KEY (`int`),
-    UNIQUE INDEX `int_UNIQUE` (`int` ASC)
+    PRIMARY KEY (`id`),
+    UNIQUE INDEX `id_UNIQUE` (`id` ASC)
 )
     ENGINE = InnoDB;
 
@@ -368,8 +368,11 @@ CREATE TABLE IF NOT EXISTS `beauty_saloon`.`bot_message`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `beauty_saloon`.`saloon_service_type`
 (
+    `id`              INT          NOT NULL AUTO_INCREMENT,
     `saloon_id`       INT NOT NULL,
     `service_type_id` INT NOT NULL,
+    PRIMARY KEY (`id`),
+    UNIQUE INDEX `id_UNIQUE` (`id` ASC),
     INDEX `saloon_id_idx` (`saloon_id` ASC),
     INDEX `service_type_id_idx` (`service_type_id` ASC),
     CONSTRAINT `saloon_service_type_saloon_id`
