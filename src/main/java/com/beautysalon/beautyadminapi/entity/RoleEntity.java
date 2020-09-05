@@ -1,27 +1,23 @@
 package com.beautysalon.beautyadminapi.entity;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import org.hibernate.annotations.Cascade;
+
 import javax.persistence.*;
-import java.util.Objects;
+import java.util.List;
 
 @Entity
 @Table(name = "role", schema = "beauty_saloon")
-public class RoleEntity {
-    private Integer id;
+public class RoleEntity extends PersistenceEntity {
+
+    @Column(name = "name")
     private String name;
 
-    @Id
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
-    @Column(name = "id")
-    public Integer getId() {
-        return id;
-    }
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "roleEntity")
+    @Cascade({org.hibernate.annotations.CascadeType.SAVE_UPDATE})
+    private List<UserEntity> userEntities;
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    @Basic
-    @Column(name = "name")
     public String getName() {
         return name;
     }
@@ -30,17 +26,11 @@ public class RoleEntity {
         this.name = name;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        RoleEntity that = (RoleEntity) o;
-        return Objects.equals(id, that.id) &&
-                Objects.equals(name, that.name);
+    public List<UserEntity> getUserEntities() {
+        return userEntities;
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, name);
+    public void setUserEntities(List<UserEntity> userEntities) {
+        this.userEntities = userEntities;
     }
 }

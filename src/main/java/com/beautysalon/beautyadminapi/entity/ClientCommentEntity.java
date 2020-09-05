@@ -1,34 +1,50 @@
 package com.beautysalon.beautyadminapi.entity;
 
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+
 import javax.persistence.*;
-import java.util.Objects;
 
 @Entity
 @Table(name = "client_comment", schema = "beauty_saloon")
-public class ClientCommentEntity {
-    private Integer id;
+public class ClientCommentEntity extends PersistenceEntity {
+
+    @Column(name = "client_id")
     private Integer clientId;
+
+    @Column(name = "order_id")
     private Integer orderId;
+
+    @Column(name = "comment_text")
     private String commentText;
-    private Byte positive;
+
+    @Column(name = "positive")
+    private Boolean positive;
+
+    @Column(name = "stars")
     private Integer stars;
-    private Byte sentToDirector;
-    private Byte reviewed;
+
+    @Column(name = "sent_to_director")
+    private Boolean sentToDirector;
+
+    @Column(name = "reviewed")
+    private Boolean reviewed;
+
+    @Column(name = "saloon_comment")
     private String saloonComment;
 
-    @Id
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
-    @Column(name = "id")
-    public Integer getId() {
-        return id;
-    }
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "client_id", referencedColumnName = "id", insertable = false, updatable = false,
+            foreignKey = @ForeignKey(name = "client_id"))
+    @Fetch(FetchMode.JOIN)
+    private ClientEntity clientEntity;
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "order_id", referencedColumnName = "id", insertable = false, updatable = false,
+            foreignKey = @ForeignKey(name = "order_id"))
+    @Fetch(FetchMode.JOIN)
+    private OrderEntity orderEntity;
 
-    @Basic
-    @Column(name = "client_id")
     public Integer getClientId() {
         return clientId;
     }
@@ -37,8 +53,6 @@ public class ClientCommentEntity {
         this.clientId = clientId;
     }
 
-    @Basic
-    @Column(name = "order_id")
     public Integer getOrderId() {
         return orderId;
     }
@@ -47,8 +61,6 @@ public class ClientCommentEntity {
         this.orderId = orderId;
     }
 
-    @Basic
-    @Column(name = "comment_text")
     public String getCommentText() {
         return commentText;
     }
@@ -57,18 +69,14 @@ public class ClientCommentEntity {
         this.commentText = commentText;
     }
 
-    @Basic
-    @Column(name = "positive")
-    public Byte getPositive() {
+    public Boolean getPositive() {
         return positive;
     }
 
-    public void setPositive(Byte positive) {
+    public void setPositive(Boolean positive) {
         this.positive = positive;
     }
 
-    @Basic
-    @Column(name = "stars")
     public Integer getStars() {
         return stars;
     }
@@ -77,28 +85,22 @@ public class ClientCommentEntity {
         this.stars = stars;
     }
 
-    @Basic
-    @Column(name = "sent_to_director")
-    public Byte getSentToDirector() {
+    public Boolean getSentToDirector() {
         return sentToDirector;
     }
 
-    public void setSentToDirector(Byte sentToDirector) {
+    public void setSentToDirector(Boolean sentToDirector) {
         this.sentToDirector = sentToDirector;
     }
 
-    @Basic
-    @Column(name = "reviewed")
-    public Byte getReviewed() {
+    public Boolean getReviewed() {
         return reviewed;
     }
 
-    public void setReviewed(Byte reviewed) {
+    public void setReviewed(Boolean reviewed) {
         this.reviewed = reviewed;
     }
 
-    @Basic
-    @Column(name = "saloon_comment")
     public String getSaloonComment() {
         return saloonComment;
     }
@@ -107,24 +109,20 @@ public class ClientCommentEntity {
         this.saloonComment = saloonComment;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        ClientCommentEntity that = (ClientCommentEntity) o;
-        return Objects.equals(id, that.id) &&
-                Objects.equals(clientId, that.clientId) &&
-                Objects.equals(orderId, that.orderId) &&
-                Objects.equals(commentText, that.commentText) &&
-                Objects.equals(positive, that.positive) &&
-                Objects.equals(stars, that.stars) &&
-                Objects.equals(sentToDirector, that.sentToDirector) &&
-                Objects.equals(reviewed, that.reviewed) &&
-                Objects.equals(saloonComment, that.saloonComment);
+    public ClientEntity getClientEntity() {
+        return clientEntity;
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, clientId, orderId, commentText, positive, stars, sentToDirector, reviewed, saloonComment);
+    public void setClientEntity(ClientEntity clientEntity) {
+        this.clientEntity = clientEntity;
     }
+
+    public OrderEntity getOrderEntity() {
+        return orderEntity;
+    }
+
+    public void setOrderEntity(OrderEntity orderEntity) {
+        this.orderEntity = orderEntity;
+    }
+
 }

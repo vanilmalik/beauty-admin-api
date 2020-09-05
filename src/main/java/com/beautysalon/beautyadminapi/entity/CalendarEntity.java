@@ -1,39 +1,43 @@
 package com.beautysalon.beautyadminapi.entity;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+
 import javax.persistence.*;
-import java.sql.Timestamp;
-import java.util.Objects;
+import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "calendar", schema = "beauty_saloon")
-public class CalendarEntity {
-    private Integer id;
-    private Timestamp day;
+public class CalendarEntity extends PersistenceEntity{
+
+    @Column(name = "day")
+    private LocalDateTime day;
+
+    @Column(name = "employee_id")
     private Integer employeeId;
 
-    @Id
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
-    @Column(name = "id")
-    public Integer getId() {
-        return id;
-    }
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "employee_id", referencedColumnName = "id", insertable = false, updatable = false,
+            foreignKey = @ForeignKey(name = "employee_id"))
+    @Fetch(FetchMode.JOIN)
+    private EmployeeEntity employeeEntity;
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "calendarEntity")
+    @Cascade({org.hibernate.annotations.CascadeType.SAVE_UPDATE})
+    private List<TimeSlotEntity> timeSlotEntities;
 
-    @Basic
-    @Column(name = "day")
-    public Timestamp getDay() {
+    public LocalDateTime getDay() {
         return day;
     }
 
-    public void setDay(Timestamp day) {
+    public void setDay(LocalDateTime day) {
         this.day = day;
     }
 
-    @Basic
-    @Column(name = "employee_id")
     public Integer getEmployeeId() {
         return employeeId;
     }
@@ -42,18 +46,19 @@ public class CalendarEntity {
         this.employeeId = employeeId;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        CalendarEntity that = (CalendarEntity) o;
-        return Objects.equals(id, that.id) &&
-                Objects.equals(day, that.day) &&
-                Objects.equals(employeeId, that.employeeId);
+    public EmployeeEntity getEmployeeEntity() {
+        return employeeEntity;
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, day, employeeId);
+    public void setEmployeeEntity(EmployeeEntity employeeEntity) {
+        this.employeeEntity = employeeEntity;
+    }
+
+    public List<TimeSlotEntity> getTimeSlotEntities() {
+        return timeSlotEntities;
+    }
+
+    public void setTimeSlotEntities(List<TimeSlotEntity> timeSlotEntities) {
+        this.timeSlotEntities = timeSlotEntities;
     }
 }

@@ -1,29 +1,32 @@
 package com.beautysalon.beautyadminapi.entity;
 
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+
 import javax.persistence.*;
-import java.util.Objects;
 
 @Entity
 @Table(name = "saloon_service_type", schema = "beauty_saloon")
-public class SaloonServiceTypeEntity {
-    private Integer id;
+public class SaloonServiceTypeEntity extends PersistenceEntity {
+
+    @Column(name = "saloon_id")
     private Integer saloonId;
+
+    @Column(name = "service_type_id")
     private Integer serviceTypeId;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "saloon_id", referencedColumnName = "id", insertable = false, updatable = false,
+            foreignKey = @ForeignKey(name = "saloon_service_type_saloon_id"))
+    @Fetch(FetchMode.JOIN)
+    private SaloonEntity saloonEntity;
 
-    @Id
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
-    @Column(name = "id")
-    public Integer getId() {
-        return id;
-    }
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "service_type_id", referencedColumnName = "id", insertable = false, updatable = false,
+            foreignKey = @ForeignKey(name = "saloon_service_type_service_type_id"))
+    @Fetch(FetchMode.JOIN)
+    private ServiceTypeEntity serviceTypeEntity;
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    @Basic
-    @Column(name = "saloon_id")
     public Integer getSaloonId() {
         return saloonId;
     }
@@ -32,8 +35,6 @@ public class SaloonServiceTypeEntity {
         this.saloonId = saloonId;
     }
 
-    @Basic
-    @Column(name = "service_type_id")
     public Integer getServiceTypeId() {
         return serviceTypeId;
     }
@@ -42,17 +43,19 @@ public class SaloonServiceTypeEntity {
         this.serviceTypeId = serviceTypeId;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        SaloonServiceTypeEntity that = (SaloonServiceTypeEntity) o;
-        return Objects.equals(saloonId, that.saloonId) &&
-                Objects.equals(serviceTypeId, that.serviceTypeId);
+    public SaloonEntity getSaloonEntity() {
+        return saloonEntity;
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(saloonId, serviceTypeId);
+    public void setSaloonEntity(SaloonEntity saloonEntity) {
+        this.saloonEntity = saloonEntity;
+    }
+
+    public ServiceTypeEntity getServiceTypeEntity() {
+        return serviceTypeEntity;
+    }
+
+    public void setServiceTypeEntity(ServiceTypeEntity serviceTypeEntity) {
+        this.serviceTypeEntity = serviceTypeEntity;
     }
 }

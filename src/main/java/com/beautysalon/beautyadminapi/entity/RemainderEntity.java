@@ -1,29 +1,29 @@
 package com.beautysalon.beautyadminapi.entity;
 
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+
 import javax.persistence.*;
-import java.util.Objects;
 
 @Entity
 @Table(name = "remainder", schema = "beauty_saloon")
-public class RemainderEntity {
-    private Integer id;
+public class RemainderEntity extends PersistenceEntity {
+
+    @Column(name = "service_type_id")
     private Integer serviceTypeId;
+
+    @Column(name = "remainder_text")
     private String remainderText;
+
+    @Column(name = "delay_days")
     private Integer delayDays;
 
-    @Id
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
-    @Column(name = "id")
-    public Integer getId() {
-        return id;
-    }
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "service_type_id", referencedColumnName = "id", insertable = false, updatable = false,
+            foreignKey = @ForeignKey(name = "service_type_id"))
+    @Fetch(FetchMode.JOIN)
+    private ServiceTypeEntity serviceTypeEntity;
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    @Basic
-    @Column(name = "service_type_id")
     public Integer getServiceTypeId() {
         return serviceTypeId;
     }
@@ -32,8 +32,6 @@ public class RemainderEntity {
         this.serviceTypeId = serviceTypeId;
     }
 
-    @Basic
-    @Column(name = "remainder_text")
     public String getRemainderText() {
         return remainderText;
     }
@@ -42,8 +40,6 @@ public class RemainderEntity {
         this.remainderText = remainderText;
     }
 
-    @Basic
-    @Column(name = "delay_days")
     public Integer getDelayDays() {
         return delayDays;
     }
@@ -52,19 +48,11 @@ public class RemainderEntity {
         this.delayDays = delayDays;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        RemainderEntity that = (RemainderEntity) o;
-        return Objects.equals(id, that.id) &&
-                Objects.equals(serviceTypeId, that.serviceTypeId) &&
-                Objects.equals(remainderText, that.remainderText) &&
-                Objects.equals(delayDays, that.delayDays);
+    public ServiceTypeEntity getServiceTypeEntity() {
+        return serviceTypeEntity;
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, serviceTypeId, remainderText, delayDays);
+    public void setServiceTypeEntity(ServiceTypeEntity serviceTypeEntity) {
+        this.serviceTypeEntity = serviceTypeEntity;
     }
 }

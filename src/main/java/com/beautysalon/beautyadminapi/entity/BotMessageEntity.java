@@ -1,31 +1,42 @@
 package com.beautysalon.beautyadminapi.entity;
 
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+
 import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
 @Table(name = "bot_message", schema = "beauty_saloon")
-public class BotMessageEntity {
-    private Integer id;
+public class BotMessageEntity extends PersistenceEntity {
+
+    @Column(name = "message_key")
     private String messageKey;
+
+    @Column(name = "message")
     private String message;
+
+    @Column(name = "message_type_id")
     private Integer messageTypeId;
+
+    @Column(name = "locale_id")
     private Integer localeId;
+
+    @Column(name = "description")
     private String description;
 
-    @Id
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
-    @Column(name = "id")
-    public Integer getId() {
-        return id;
-    }
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "message_type_id", referencedColumnName = "id", insertable = false, updatable = false,
+            foreignKey = @ForeignKey(name = "message_type_id"))
+    @Fetch(FetchMode.JOIN)
+    private BotMessageTypeEntity botMessageTypeEntity;
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "locale_id", referencedColumnName = "id", insertable = false, updatable = false,
+            foreignKey = @ForeignKey(name = "locale_id"))
+    @Fetch(FetchMode.JOIN)
+    private LocaleEntity localeEntity;
 
-    @Basic
-    @Column(name = "message_key")
     public String getMessageKey() {
         return messageKey;
     }
@@ -34,8 +45,6 @@ public class BotMessageEntity {
         this.messageKey = messageKey;
     }
 
-    @Basic
-    @Column(name = "message")
     public String getMessage() {
         return message;
     }
@@ -44,8 +53,6 @@ public class BotMessageEntity {
         this.message = message;
     }
 
-    @Basic
-    @Column(name = "message_type_id")
     public Integer getMessageTypeId() {
         return messageTypeId;
     }
@@ -54,8 +61,6 @@ public class BotMessageEntity {
         this.messageTypeId = messageTypeId;
     }
 
-    @Basic
-    @Column(name = "locale_id")
     public Integer getLocaleId() {
         return localeId;
     }
@@ -64,8 +69,6 @@ public class BotMessageEntity {
         this.localeId = localeId;
     }
 
-    @Basic
-    @Column(name = "description")
     public String getDescription() {
         return description;
     }
@@ -74,21 +77,37 @@ public class BotMessageEntity {
         this.description = description;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        BotMessageEntity that = (BotMessageEntity) o;
-        return Objects.equals(id, that.id) &&
-                Objects.equals(messageKey, that.messageKey) &&
-                Objects.equals(message, that.message) &&
-                Objects.equals(messageTypeId, that.messageTypeId) &&
-                Objects.equals(localeId, that.localeId) &&
-                Objects.equals(description, that.description);
+    public BotMessageTypeEntity getBotMessageTypeEntity() {
+        return botMessageTypeEntity;
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, messageKey, message, messageTypeId, localeId, description);
+    /**
+     * Sets botMessageTypeEntity.
+     *
+     * @param botMessageTypeEntity the botMessageTypeEntity
+     */
+    public void setBotMessageTypeEntity(BotMessageTypeEntity botMessageTypeEntity) {
+        if (Objects.nonNull(botMessageTypeEntity)) {
+            this.messageTypeId = botMessageTypeEntity.getId();
+        }
+
+        this.botMessageTypeEntity = botMessageTypeEntity;
+    }
+
+    public LocaleEntity getLocaleEntity() {
+        return localeEntity;
+    }
+
+    /**
+     * Sets localeEntity.
+     *
+     * @param localeEntity the localeEntity
+     */
+    public void setLocaleEntity(LocaleEntity localeEntity) {
+        if (Objects.nonNull(localeEntity)) {
+            this.localeId = localeEntity.getId();
+        }
+
+        this.localeEntity = localeEntity;
     }
 }
