@@ -1,32 +1,64 @@
 package com.beautysalon.beautyadminapi.entity;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+
 import javax.persistence.*;
-import java.util.Objects;
+import java.util.List;
 
 @Entity
 @Table(name = "order", schema = "beauty_saloon")
-public class OrderEntity {
-    private Integer id;
-    private Integer clientId;
-    private Integer timeSlotId;
-    private Integer employeeId;
-    private Integer serviceId;
-    private String comment;
-    private Byte executed;
+public class OrderEntity extends PersistenceEntity {
 
-    @Id
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
-    @Column(name = "id")
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    @Basic
     @Column(name = "client_id")
+    private Integer clientId;
+
+    @Column(name = "time_slot_id")
+    private Integer timeSlotId;
+
+    @Column(name = "employee_id")
+    private Integer employeeId;
+
+    @Column(name = "service_id")
+    private Integer serviceId;
+
+    @Column(name = "comment")
+    private String comment;
+
+    @Column(name = "executed")
+    private Boolean executed;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "client_id", referencedColumnName = "id", insertable = false, updatable = false,
+            foreignKey = @ForeignKey(name = "order_client_id"))
+    @Fetch(FetchMode.JOIN)
+    private ClientEntity clientEntity;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "time_slot_id", referencedColumnName = "id", insertable = false, updatable = false,
+            foreignKey = @ForeignKey(name = "order_time_slot_id"))
+    @Fetch(FetchMode.JOIN)
+    private TimeSlotEntity timeSlotEntity;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "employee_id", referencedColumnName = "id", insertable = false, updatable = false,
+            foreignKey = @ForeignKey(name = "order_employee_id"))
+    @Fetch(FetchMode.JOIN)
+    private EmployeeEntity employeeEntity;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "service_id", referencedColumnName = "id", insertable = false, updatable = false,
+            foreignKey = @ForeignKey(name = "order_service_id"))
+    @Fetch(FetchMode.JOIN)
+    private ServiceTypeEntity serviceTypeEntity;
+
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "orderEntity")
+    @Cascade({org.hibernate.annotations.CascadeType.SAVE_UPDATE})
+    private List<ClientCommentEntity> clientCommentEntities;
+
     public Integer getClientId() {
         return clientId;
     }
@@ -35,8 +67,6 @@ public class OrderEntity {
         this.clientId = clientId;
     }
 
-    @Basic
-    @Column(name = "time_slot_id")
     public Integer getTimeSlotId() {
         return timeSlotId;
     }
@@ -45,8 +75,6 @@ public class OrderEntity {
         this.timeSlotId = timeSlotId;
     }
 
-    @Basic
-    @Column(name = "employee_id")
     public Integer getEmployeeId() {
         return employeeId;
     }
@@ -55,8 +83,6 @@ public class OrderEntity {
         this.employeeId = employeeId;
     }
 
-    @Basic
-    @Column(name = "service_id")
     public Integer getServiceId() {
         return serviceId;
     }
@@ -65,8 +91,6 @@ public class OrderEntity {
         this.serviceId = serviceId;
     }
 
-    @Basic
-    @Column(name = "comment")
     public String getComment() {
         return comment;
     }
@@ -75,32 +99,51 @@ public class OrderEntity {
         this.comment = comment;
     }
 
-    @Basic
-    @Column(name = "executed")
-    public Byte getExecuted() {
+    public Boolean getExecuted() {
         return executed;
     }
 
-    public void setExecuted(Byte executed) {
+    public void setExecuted(Boolean executed) {
         this.executed = executed;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        OrderEntity that = (OrderEntity) o;
-        return Objects.equals(id, that.id) &&
-                Objects.equals(clientId, that.clientId) &&
-                Objects.equals(timeSlotId, that.timeSlotId) &&
-                Objects.equals(employeeId, that.employeeId) &&
-                Objects.equals(serviceId, that.serviceId) &&
-                Objects.equals(comment, that.comment) &&
-                Objects.equals(executed, that.executed);
+    public ClientEntity getClientEntity() {
+        return clientEntity;
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, clientId, timeSlotId, employeeId, serviceId, comment, executed);
+    public void setClientEntity(ClientEntity clientEntity) {
+        this.clientEntity = clientEntity;
+    }
+
+    public TimeSlotEntity getTimeSlotEntity() {
+        return timeSlotEntity;
+    }
+
+    public void setTimeSlotEntity(TimeSlotEntity timeSlotEntity) {
+        this.timeSlotEntity = timeSlotEntity;
+    }
+
+    public EmployeeEntity getEmployeeEntity() {
+        return employeeEntity;
+    }
+
+    public void setEmployeeEntity(EmployeeEntity employeeEntity) {
+        this.employeeEntity = employeeEntity;
+    }
+
+    public ServiceTypeEntity getServiceTypeEntity() {
+        return serviceTypeEntity;
+    }
+
+    public void setServiceTypeEntity(ServiceTypeEntity serviceTypeEntity) {
+        this.serviceTypeEntity = serviceTypeEntity;
+    }
+
+    public List<ClientCommentEntity> getClientCommentEntities() {
+        return clientCommentEntities;
+    }
+
+    public void setClientCommentEntities(List<ClientCommentEntity> clientCommentEntities) {
+        this.clientCommentEntities = clientCommentEntities;
     }
 }

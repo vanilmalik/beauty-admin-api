@@ -1,28 +1,31 @@
 package com.beautysalon.beautyadminapi.entity;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import org.hibernate.annotations.Cascade;
+
 import javax.persistence.*;
-import java.util.Objects;
+import java.util.List;
 
 @Entity
 @Table(name = "saloon", schema = "beauty_saloon")
-public class SaloonEntity {
-    private Integer id;
+public class SaloonEntity extends PersistenceEntity {
+
+    @Column(name = "name")
     private String name;
+
+    @Column(name = "address")
     private String address;
 
-    @Id
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
-    @Column(name = "id")
-    public Integer getId() {
-        return id;
-    }
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "saloonEntity")
+    @Cascade({org.hibernate.annotations.CascadeType.SAVE_UPDATE})
+    private List<EmployeeEntity> employeeEntities;
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "saloonEntity")
+    @Cascade({org.hibernate.annotations.CascadeType.SAVE_UPDATE})
+    private List<SaloonServiceTypeEntity> saloonServiceTypeEntities;
 
-    @Basic
-    @Column(name = "name")
     public String getName() {
         return name;
     }
@@ -31,8 +34,6 @@ public class SaloonEntity {
         this.name = name;
     }
 
-    @Basic
-    @Column(name = "address")
     public String getAddress() {
         return address;
     }
@@ -41,18 +42,19 @@ public class SaloonEntity {
         this.address = address;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        SaloonEntity that = (SaloonEntity) o;
-        return Objects.equals(id, that.id) &&
-                Objects.equals(name, that.name) &&
-                Objects.equals(address, that.address);
+    public List<EmployeeEntity> getEmployeeEntities() {
+        return employeeEntities;
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, name, address);
+    public void setEmployeeEntities(List<EmployeeEntity> employeeEntities) {
+        this.employeeEntities = employeeEntities;
+    }
+
+    public List<SaloonServiceTypeEntity> getSaloonServiceTypeEntities() {
+        return saloonServiceTypeEntities;
+    }
+
+    public void setSaloonServiceTypeEntities(List<SaloonServiceTypeEntity> saloonServiceTypeEntities) {
+        this.saloonServiceTypeEntities = saloonServiceTypeEntities;
     }
 }

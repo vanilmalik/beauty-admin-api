@@ -1,41 +1,68 @@
 package com.beautysalon.beautyadminapi.entity;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import org.hibernate.annotations.Cascade;
+
 import javax.persistence.*;
-import java.sql.Timestamp;
-import java.util.Objects;
+import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "client", schema = "beauty_saloon")
-public class ClientEntity {
-    private Integer id;
+public class ClientEntity extends PersistenceEntity {
+
+    @Column(name = "telegram_user_id")
     private Integer telegramUserId;
+
+    @Column(name = "telegram_chat_id")
     private Integer telegramChatId;
+
+    @Column(name = "phone_number")
     private String phoneNumber;
+
+    @Column(name = "telegram_username")
     private String telegramUsername;
+
+    @Column(name = "telegram_name")
     private String telegramName;
+
+    @Column(name = "name")
     private String name;
+
+    @Column(name = "surname")
     private String surname;
+
+    @Column(name = "comment")
     private String comment;
+
+    @Column(name = "default_saloon")
     private Integer defaultSaloon;
-    private Timestamp lastVisit;
-    private Byte confirmed;
-    private Byte active;
-    private Byte mailingOn;
-    private Byte blocked;
 
-    @Id
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
-    @Column(name = "id")
-    public Integer getId() {
-        return id;
-    }
+    @Column(name = "last_visit")
+    private LocalDateTime lastVisit;
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
+    @Column(name = "confirmed")
+    private Boolean confirmed;
 
-    @Basic
-    @Column(name = " telegram_user_id")
+    @Column(name = "active")
+    private Boolean active;
+
+    @Column(name = "mailing_on")
+    private Boolean mailingOn;
+
+    @Column(name = "blocked")
+    private Boolean blocked;
+
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "clientEntity")
+    @Cascade({org.hibernate.annotations.CascadeType.SAVE_UPDATE})
+    private List<ClientCommentEntity> clientCommentEntities;
+
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "clientEntity")
+    @Cascade({org.hibernate.annotations.CascadeType.SAVE_UPDATE})
+    private List<OrderEntity> orderEntities;
+
     public Integer getTelegramUserId() {
         return telegramUserId;
     }
@@ -44,8 +71,6 @@ public class ClientEntity {
         this.telegramUserId = telegramUserId;
     }
 
-    @Basic
-    @Column(name = " telegram_chat_id")
     public Integer getTelegramChatId() {
         return telegramChatId;
     }
@@ -54,8 +79,6 @@ public class ClientEntity {
         this.telegramChatId = telegramChatId;
     }
 
-    @Basic
-    @Column(name = "phone_number")
     public String getPhoneNumber() {
         return phoneNumber;
     }
@@ -64,8 +87,6 @@ public class ClientEntity {
         this.phoneNumber = phoneNumber;
     }
 
-    @Basic
-    @Column(name = "telegram_username")
     public String getTelegramUsername() {
         return telegramUsername;
     }
@@ -74,8 +95,6 @@ public class ClientEntity {
         this.telegramUsername = telegramUsername;
     }
 
-    @Basic
-    @Column(name = "telegram_name")
     public String getTelegramName() {
         return telegramName;
     }
@@ -84,8 +103,6 @@ public class ClientEntity {
         this.telegramName = telegramName;
     }
 
-    @Basic
-    @Column(name = "name")
     public String getName() {
         return name;
     }
@@ -94,8 +111,6 @@ public class ClientEntity {
         this.name = name;
     }
 
-    @Basic
-    @Column(name = "surname")
     public String getSurname() {
         return surname;
     }
@@ -104,8 +119,6 @@ public class ClientEntity {
         this.surname = surname;
     }
 
-    @Basic
-    @Column(name = "comment")
     public String getComment() {
         return comment;
     }
@@ -114,8 +127,6 @@ public class ClientEntity {
         this.comment = comment;
     }
 
-    @Basic
-    @Column(name = "default_saloon")
     public Integer getDefaultSaloon() {
         return defaultSaloon;
     }
@@ -124,80 +135,59 @@ public class ClientEntity {
         this.defaultSaloon = defaultSaloon;
     }
 
-    @Basic
-    @Column(name = "last_visit")
-    public Timestamp getLastVisit() {
+    public LocalDateTime getLastVisit() {
         return lastVisit;
     }
 
-    public void setLastVisit(Timestamp lastVisit) {
+    public void setLastVisit(LocalDateTime lastVisit) {
         this.lastVisit = lastVisit;
     }
 
-    @Basic
-    @Column(name = "confirmed")
-    public Byte getConfirmed() {
+    public Boolean getConfirmed() {
         return confirmed;
     }
 
-    public void setConfirmed(Byte confirmed) {
+    public void setConfirmed(Boolean confirmed) {
         this.confirmed = confirmed;
     }
 
-    @Basic
-    @Column(name = "active")
-    public Byte getActive() {
+    public Boolean getActive() {
         return active;
     }
 
-    public void setActive(Byte active) {
+    public void setActive(Boolean active) {
         this.active = active;
     }
 
-    @Basic
-    @Column(name = "mailing_on")
-    public Byte getMailingOn() {
+    public Boolean getMailingOn() {
         return mailingOn;
     }
 
-    public void setMailingOn(Byte mailingOn) {
+    public void setMailingOn(Boolean mailingOn) {
         this.mailingOn = mailingOn;
     }
 
-    @Basic
-    @Column(name = "blocked")
-    public Byte getBlocked() {
+    public Boolean getBlocked() {
         return blocked;
     }
 
-    public void setBlocked(Byte blocked) {
+    public void setBlocked(Boolean blocked) {
         this.blocked = blocked;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        ClientEntity that = (ClientEntity) o;
-        return Objects.equals(id, that.id) &&
-                Objects.equals(telegramUserId, that.telegramUserId) &&
-                Objects.equals(telegramChatId, that.telegramChatId) &&
-                Objects.equals(phoneNumber, that.phoneNumber) &&
-                Objects.equals(telegramUsername, that.telegramUsername) &&
-                Objects.equals(telegramName, that.telegramName) &&
-                Objects.equals(name, that.name) &&
-                Objects.equals(surname, that.surname) &&
-                Objects.equals(comment, that.comment) &&
-                Objects.equals(defaultSaloon, that.defaultSaloon) &&
-                Objects.equals(lastVisit, that.lastVisit) &&
-                Objects.equals(confirmed, that.confirmed) &&
-                Objects.equals(active, that.active) &&
-                Objects.equals(mailingOn, that.mailingOn) &&
-                Objects.equals(blocked, that.blocked);
+    public List<ClientCommentEntity> getClientCommentEntities() {
+        return clientCommentEntities;
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, telegramUserId, telegramChatId, phoneNumber, telegramUsername, telegramName, name, surname, comment, defaultSaloon, lastVisit, confirmed, active, mailingOn, blocked);
+    public void setClientCommentEntities(List<ClientCommentEntity> clientCommentEntities) {
+        this.clientCommentEntities = clientCommentEntities;
+    }
+
+    public List<OrderEntity> getOrderEntities() {
+        return orderEntities;
+    }
+
+    public void setOrderEntities(List<OrderEntity> orderEntities) {
+        this.orderEntities = orderEntities;
     }
 }

@@ -1,28 +1,26 @@
 package com.beautysalon.beautyadminapi.entity;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import org.hibernate.annotations.Cascade;
+
 import javax.persistence.*;
-import java.util.Objects;
+import java.util.List;
 
 @Entity
 @Table(name = "bot_message_type", schema = "beauty_saloon")
-public class BotMessageTypeEntity {
-    private Integer id;
+public class BotMessageTypeEntity extends PersistenceEntity {
+
+    @Column(name = "type")
     private String type;
+
+    @Column(name = "description")
     private String description;
 
-    @Id
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
-    @Column(name = "id")
-    public Integer getId() {
-        return id;
-    }
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "botMessageTypeEntity")
+    @Cascade({org.hibernate.annotations.CascadeType.SAVE_UPDATE})
+    private List<BotMessageEntity> botMessages;
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    @Basic
-    @Column(name = "type")
     public String getType() {
         return type;
     }
@@ -31,8 +29,6 @@ public class BotMessageTypeEntity {
         this.type = type;
     }
 
-    @Basic
-    @Column(name = "description")
     public String getDescription() {
         return description;
     }
@@ -41,18 +37,11 @@ public class BotMessageTypeEntity {
         this.description = description;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        BotMessageTypeEntity that = (BotMessageTypeEntity) o;
-        return Objects.equals(id, that.id) &&
-                Objects.equals(type, that.type) &&
-                Objects.equals(description, that.description);
+    public List<BotMessageEntity> getBotMessages() {
+        return botMessages;
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, type, description);
+    public void setBotMessages(List<BotMessageEntity> botMessages) {
+        this.botMessages = botMessages;
     }
 }

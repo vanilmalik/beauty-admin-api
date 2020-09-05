@@ -1,30 +1,32 @@
 package com.beautysalon.beautyadminapi.entity;
 
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+
 import javax.persistence.*;
-import java.util.Objects;
 
 @Entity
 @Table(name = "user", schema = "beauty_saloon")
-public class UserEntity {
-    private Integer id;
+public class UserEntity extends PersistenceEntity {
+
+    @Column(name = "login")
     private String login;
+
+    @Column(name = "password")
     private String password;
+
+    @Column(name = "role_id")
     private Integer roleId;
+
+    @Column(name = "email")
     private String email;
 
-    @Id
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
-    @Column(name = "id")
-    public Integer getId() {
-        return id;
-    }
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "role_id", referencedColumnName = "id", insertable = false, updatable = false,
+            foreignKey = @ForeignKey(name = "role_id"))
+    @Fetch(FetchMode.JOIN)
+    private RoleEntity roleEntity;
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    @Basic
-    @Column(name = "login")
     public String getLogin() {
         return login;
     }
@@ -33,8 +35,6 @@ public class UserEntity {
         this.login = login;
     }
 
-    @Basic
-    @Column(name = "password")
     public String getPassword() {
         return password;
     }
@@ -43,8 +43,6 @@ public class UserEntity {
         this.password = password;
     }
 
-    @Basic
-    @Column(name = "role_id")
     public Integer getRoleId() {
         return roleId;
     }
@@ -53,8 +51,6 @@ public class UserEntity {
         this.roleId = roleId;
     }
 
-    @Basic
-    @Column(name = "email")
     public String getEmail() {
         return email;
     }
@@ -63,20 +59,11 @@ public class UserEntity {
         this.email = email;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        UserEntity that = (UserEntity) o;
-        return Objects.equals(id, that.id) &&
-                Objects.equals(login, that.login) &&
-                Objects.equals(password, that.password) &&
-                Objects.equals(roleId, that.roleId) &&
-                Objects.equals(email, that.email);
+    public RoleEntity getRoleEntity() {
+        return roleEntity;
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, login, password, roleId, email);
+    public void setRoleEntity(RoleEntity roleEntity) {
+        this.roleEntity = roleEntity;
     }
 }

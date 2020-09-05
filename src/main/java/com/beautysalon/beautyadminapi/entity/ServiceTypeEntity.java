@@ -1,28 +1,41 @@
 package com.beautysalon.beautyadminapi.entity;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import org.hibernate.annotations.Cascade;
+
 import javax.persistence.*;
-import java.util.Objects;
+import java.util.List;
 
 @Entity
 @Table(name = "service_type", schema = "beauty_saloon")
-public class ServiceTypeEntity {
-    private Integer id;
+public class ServiceTypeEntity extends PersistenceEntity {
+
+    @Column(name = "service_name")
     private String serviceName;
+
+    @Column(name = "price")
     private Integer price;
 
-    @Id
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
-    @Column(name = "id")
-    public Integer getId() {
-        return id;
-    }
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "serviceTypeEntity")
+    @Cascade({org.hibernate.annotations.CascadeType.SAVE_UPDATE})
+    private List<EmployeeEntity> employeeEntities;
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "serviceTypeEntity")
+    @Cascade({org.hibernate.annotations.CascadeType.SAVE_UPDATE})
+    private List<OrderEntity> orderEntities;
 
-    @Basic
-    @Column(name = "service_name")
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "serviceTypeEntity")
+    @Cascade({org.hibernate.annotations.CascadeType.SAVE_UPDATE})
+    private List<RemainderEntity> remainderEntities;
+
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "serviceTypeEntity")
+    @Cascade({org.hibernate.annotations.CascadeType.SAVE_UPDATE})
+    private List<SaloonServiceTypeEntity> saloonServiceTypeEntities;
+
     public String getServiceName() {
         return serviceName;
     }
@@ -31,8 +44,6 @@ public class ServiceTypeEntity {
         this.serviceName = serviceName;
     }
 
-    @Basic
-    @Column(name = "price")
     public Integer getPrice() {
         return price;
     }
@@ -41,18 +52,35 @@ public class ServiceTypeEntity {
         this.price = price;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        ServiceTypeEntity that = (ServiceTypeEntity) o;
-        return Objects.equals(id, that.id) &&
-                Objects.equals(serviceName, that.serviceName) &&
-                Objects.equals(price, that.price);
+    public List<EmployeeEntity> getEmployeeEntities() {
+        return employeeEntities;
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, serviceName, price);
+    public void setEmployeeEntities(List<EmployeeEntity> employeeEntities) {
+        this.employeeEntities = employeeEntities;
+    }
+
+    public List<OrderEntity> getOrderEntities() {
+        return orderEntities;
+    }
+
+    public void setOrderEntities(List<OrderEntity> orderEntities) {
+        this.orderEntities = orderEntities;
+    }
+
+    public List<RemainderEntity> getRemainderEntities() {
+        return remainderEntities;
+    }
+
+    public void setRemainderEntities(List<RemainderEntity> remainderEntities) {
+        this.remainderEntities = remainderEntities;
+    }
+
+    public List<SaloonServiceTypeEntity> getSaloonServiceTypeEntities() {
+        return saloonServiceTypeEntities;
+    }
+
+    public void setSaloonServiceTypeEntities(List<SaloonServiceTypeEntity> saloonServiceTypeEntities) {
+        this.saloonServiceTypeEntities = saloonServiceTypeEntities;
     }
 }

@@ -24,8 +24,8 @@ USE `beauty_saloon`;
 CREATE TABLE IF NOT EXISTS `beauty_saloon`.`client`
 (
     `id`                INT          NOT NULL AUTO_INCREMENT,
-    ` telegram_user_id` INT          NOT NULL,
-    ` telegram_chat_id` INT          NOT NULL,
+    `telegram_user_id` INT          NOT NULL,
+    `telegram_chat_id` INT          NOT NULL,
     `phone_number`      VARCHAR(15)  NOT NULL,
     `telegram_username` VARCHAR(128) NOT NULL,
     `telegram_name`     VARCHAR(128) NULL,
