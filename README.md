@@ -17,7 +17,7 @@ Current endpoints :
 * ```GET localhost:8181/clients/{id}``` - find by {id}
 * ```POST localhost:8181/clients``` - create
 * ```PUT localhost:8181/clients``` - update
-* ```PUT localhost:8181/clients/pageable?page=0&size=10%sort=name asc``` - pageable
+* ```GET localhost:8181/clients/pageable?page=0&size=10%sort=name asc``` - pageable
 - discounts
 * ```GET localhost:8181/discounts``` - find all
 * ```GET localhost:8181/discounts/{id}``` - find by {id}
